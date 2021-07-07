@@ -1,0 +1,139 @@
+package com.company;
+import java.util.Locale;
+import java.util.Scanner;
+
+class my_library
+{
+    my_library()
+    {
+        System.out.println("Welcome to my_library");
+    }
+    int no_of_books=0;
+    String[] name_of_book = new String[10];
+    String[] total_book = new String[10];
+    String[] assigned_book = new String[10];
+    int assigned_people=0;
+    public void getName_of_book() {
+        System.out.println("--------- LIST ---------");
+        for (String s : name_of_book) {
+            if (s != null)
+                System.out.println(s);
+            else {
+                break; }
+        }
+        System.out.println("--------- ^^^^ ---------");
+    }
+    public void add_book(String book) {
+        name_of_book[no_of_books] = book;
+        total_book[no_of_books] = book;
+        no_of_books+=1;
+        System.out.println(book+" added to library!");
+    }
+
+    int search_book(String book_name)
+    {
+        try {
+            for (String s : name_of_book) {
+                if (s.equals(book_name)) {
+                    return 1;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+//          System.out.println(book_name + " <--Not available");
+            return 0;
+        }
+        return 0;
+    }
+    public void take_book()
+    {
+        System.out.println("Enter name of book(use _ as space): ");
+        Scanner sc = new Scanner(System.in);
+        String book = sc.next();
+        if (search_book(book)==1)
+        {
+            System.out.print("Enter your name: ");
+            String name = sc.next();
+            System.out.println("Book taken successfully by "+ name);
+            assigned_book[assigned_people] = name.toUpperCase(Locale.ROOT)+"-"+book;
+            assigned_people+=1;
+            for (int j=0;j<name_of_book.length;j++)
+            {
+                if (book.equals(name_of_book[j]))
+                {
+                  name_of_book[j]="<< Already Taken >>";
+                }
+            }
+        }
+        else
+        {
+            System.out.println("Book is not available or taken by another person");
+        }
+    }
+    public void show_subscribers()
+    {
+        for (String people : assigned_book) {
+            if(people != null && !people.equals(""))
+                System.out.println(people);
+        }
+    }
+    public void return_book()
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the returning book name: ");
+        String book_name = sc.next();
+        for (int i=0;i< total_book.length;i++)
+        {
+            if(book_name.equals(total_book[i]))
+            {
+                name_of_book[i] = book_name;
+                System.out.println("Book returned successfully");
+            }
+            if(assigned_book[i]!=null) {
+                String[] str = assigned_book[i].split("-");
+                if (str[1].equals(book_name)) {
+                    assigned_book[i] = "";
+                }
+            }
+        }
+
+    }
+}
+
+class test2{
+    public static void main(String[] args){
+        my_library l1 = new my_library();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select option from below");
+        System.out.println("1. See all available books");
+        System.out.println("2. Add book");
+        System.out.println("3. Search for book");
+        System.out.println("4. Lend book");
+        System.out.println("5. Return book");
+        System.out.println("6. See subscribed(already taken) books");
+        int a = 0;
+        for (int i=0;a!=7;i++) {
+            System.out.print("Enter your choice: ");
+            a = sc.nextInt();
+            switch (a) {
+                case 1 -> l1.getName_of_book();
+                case 2 -> {
+                    System.out.println("Enter book name to add");
+                    l1.add_book(sc.next());
+                }
+                case 3 -> {
+                    System.out.println("Enter book name to search");
+                    if (l1.search_book(sc.next()) == 1) {
+                        System.out.println("Book available");
+                    } else
+                        System.out.println("Not available");
+                }
+                case 4 -> l1.take_book();
+                case 5 -> l1.return_book();
+                case 6 -> l1.show_subscribers();
+                default -> a = 7;
+            }
+        }
+    }
+}
